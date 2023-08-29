@@ -1,41 +1,77 @@
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+* {  /* o aesterisco representa regras gerais para a tela */
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Helvetica;;
 }
 
-#calculadora {
-    border: 1px solid #ccc;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+body { /* alterando propriedades do corpo e tudo que nele está */
+    background-color: rgb(81, 81, 81);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3em;
 }
 
-#display {
-    width: 92%;
-    padding: 10px;
-    margin-bottom: 10px;
-    font-size: 20px;
+#calculadora{ /* localizando a div calculadora pelo ID */
+    width: 400px;
+    padding: 0.5em;
+    background-color: rgb(222, 222, 222);
+    color: black;
+    display: flex;
+    flex-direction: column;
+    border-color: #00000026;
 }
 
-.buttons {
+#calculadora h3 { 
+    font-size: .8em;
+    font-weight: 300;
+    color: #666;
+}
+
+#operacao {
+    text-align: right;
+}
+
+#operacao-preview, /* podemos fazer regras em conjunto para setores diferentes ao mesmo tempo dessa forma, economizando linhas */
+#operacao-atual {
+    min-height: 1.6em;
+    padding: 0.2em;
+    overflow-wrap: break-word;
+}
+
+#operacao-preview { /* alterando propriedades da div, referenciando-a pelo ID*/
+    color: #666;
+}
+
+#operacao-atual{
+    font-size: 3em;
+    font-weight: 700;
+}
+
+#botoes-container { /* altera propriedade do grupo de botoes dentro da div */
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 5px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1px;
 }
 
-button {
-    padding: 10px;
-    font-size: 18px;
-    background-color: #f0f0f0;
-    border: none;
+#botoes-container button{ /* altera as propriedades de cada botão individualmente, que esteja dentro da div */
+    border-color: #00000026;
+    height: 4em;
+    font-size: 1.2em;
+    background-color:#e9e9e9;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #ddd;
+#botoes-container button:hover{ /* alera as propriedades enquando o mouse estiver sobre o botão */
+    background-color: #d3d3d3;
+    border-color: #00000026;
+}
+
+#botoes-container .number{ /* alerando os botoes da CLASSE number dentro da div */
+    background-color: white;
+}
+
+#equal-btn{ /* buscando um elemento pelo ID e alterando suas prorpriedades */
+    grid-column: span 2;
 }

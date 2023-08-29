@@ -2,36 +2,39 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora</title>
+    <title>Calculadora JavaScript</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script> <!-- o "defer" é usado para o script ser carregado somente após o carregamento do HTML -->
 </head>
 <body>
-
-    <div id="calculadora">
-        <input type="text" id="display" readonly>
-        <div class="buttons">
-            <button id="btn1" onclick="insert('1')">1</button>
-            <button id="btn2" onclick="insert('2')">2</button>
-            <button id="btn3" onclick="insert('3')">3</button>
-            <button id="btn4" onclick="insert('4')">4</button>
-            <button id="btn5" onclick="insert('5')">5</button>
-            <button id="btn6" onclick="insert('6')">6</button>
-            <button id="btn7" onclick="insert('7')">7</button>
-            <button id="btn8" onclick="insert('8')">8</button>
-            <button id="btn9" onclick="insert('9')">9</button>
-            <button id="btn0" onclick="insert('0')">0</button>
-            <button id="plus" onclick= "insert('+')">+</button>
-            <button id="minus" onclick="insert('-')">-</button>
-            <button id="btnbar" onclick="insert('/')">/</button>
-            <button id="times" onclick="insert('*')">*</button>
-            <button id="clear" onclick="limpar()">C</button>
-            <button id="calculate" onclick="calcular()">=</button>
-        </div>
+    <div id="calculadora"> <!-- Criando a div da calculadora para o Layout -->
+        <h3>Calculadora</h3>
+            <div id="operacao">
+                <div id="operacao-preview"></div>
+                <div id="operacao-atual"></div>
+            </div>
+                <div id="botoes-container"> <!-- Criando a div com um ID que identifica todos os botões dentro da div -->
+                    <button>CE</button>
+                    <button>C</button>
+                    <button>DEL</button>
+                    <button>/</button>
+                    <button class="number">7</button> <!-- atribuindo uma classe para os botoes que são número para edita-los no CSS -->
+                    <button class="number">8</button>
+                    <button class="number">9</button>
+                    <button>*</button>
+                    <button class="number">4</button>
+                    <button class="number">5</button>
+                    <button class="number">6</button>
+                    <button>-</button>
+                    <button class="number">1</button>
+                    <button class="number">2</button>
+                    <button class="number">3</button>
+                    <button>+</button>
+                    <button class="number">0</button>
+                    <button class="number">.</button>
+                    <button id="equal-btn">=</button> <!-- atribuindo um ID para diferenciar o botão no CSS e mudar exclusivamente seu tamanho -->
+                </div>
     </div>
-    <script src="script.js"></script>
-</body>
-</html>
-    
 </body>
 </html>
