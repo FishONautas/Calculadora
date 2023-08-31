@@ -14,42 +14,109 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
                    // nossa classe Calculator irá receber os dois elementos do HTML que mostram a operação atual e o preview, para usarmos posteriormente para exibir os valores dos botões acionados
 
     constructor(previewOperacaoText, atualOperacaoText){ /* constructor é um método para classes (um método é uma função que só se aplica dentro da classe e não é reutilizavel fora do bloco)
-                                                 ele serve para estabelecer parametros que devem ser informados pelo objeto quando ele participar da classe, esses parametros serão usados para operar
-                                                 nas requisições dentro do constructor
+                                                         ele serve para estabelecer parametros que devem ser informados pelo objeto quando ele participar da classe, esses parametros serão usados para operar
+                                                        nas requisições dentro do constructor
 
-                                                class Cachorro{
-                                                    Constructor (latido, tamanho){
-                                                        this.latido = latido
-                                                        this.tamanho = tamanho
-                                                    }
-                                                 }
+                                                          class Carro{
 
-                                                 let Poodle = new Cachorro(médio, pequeno)
-                                                 console.log(Poodle.tamanho)
+                                                          constructor (marca, modelo){
+                                                          this.marca = marca
+                                                          this.modelo = modelo
+                                                             this.ano = 2015
+                                                             }
 
-                                                 nesse caso ele rertornará "pequeno" */
-                                                 // o construtor serve para atribuir valores quando um objeto é criado a partir da classe em questão
+                                                          mostrarAtributos(){
+                                                          return `Marca: ${this.marca}, Modelo: ${this.modelo}, Ano: ${this.ano}`
+                                                             }
+                                                          }
+                                                
+                                                          let Sedan = new Carro(Honda, Civic)
+                                                          console.log(Sedan.modelo) --- Mostra o modelo do carro
+                                                          console.log(Sedan.mostrarAtributos()) --- Mostra todos atributos do objeto
+                                                          */
+                                                 
+                                                         // o construtor serve para atribuir valores quando um objeto é criado a partir da classe em questão
                                                  
         this.previewOperacaoText = previewOperacaoText // armezanando valor da variavel, em uma outra variavel que armazena o texto
         this.atualOperacaoText = atualOperacaoText     // armezanando valor da variavel, em uma outra variavel que armazena o texto
-        this.atualOperacao = ""                 // faz a operação atual sempre começar como uma string vazia
+        this.atualOperacao = ""                        // faz a operação atual sempre começar como uma string vazia
     }
 
-    addDigit(digit){ // o método add DIgit é acionado quando um número é passado para ele, no caso ele está usando o valor do "atualOperacao"
-        this.atualOperacao  = digit // não entendi de onde veio esse "atualOperacao", já que não declarei a variavel em nenhum lugar,mas ela recebe o digit
-        this.updateScreen() // feito isso, chama-se a função de updateScreen
+    addDigit(digit){                 // o método add Digit é acionado quando um número é passado para ele, no caso ele está usando o valor do "atualOperacao"
+        console.log(digit)
+        if (digit === "." && this.atualOperacaoText.innerText.includes(".")){   // se o valor "digit" for "." e também no valor atual da operação já incluir um "." faça:
+            return                   // se as condições forem atendidads, recebemos um "return" vazio que fará o método addDigit parar imediatamente
+        }
+                 
+        this.atualOperacao  = digit  // faz com que a variavel que incia vazia receba um valor, no caso digit, que é o parametro da função, esse valor só sera obtido quando
+                                     // um objeto acionar essa função passando o valor do parametro
+
+        this.updateScreen()          // feito isso, chama-se a função de updateScreen
     }
 
-    updateScreen(){ //inicia função
-        this.atualOperacaoText.innerText += this.atualOperacao // ao atualizar, ele faz com que o valor "atualOperacao" se concatene ao próximo valor enviado ao "atualOperacao"
+    cleanScreen(){
+        this.previewOperacaoText.innerText = ""
+        this.atualOperacaoText.innerText = ""
     }
 
+    identificaOperacao(operacao){
+
+        let valorOperacao
+        let preview = +this.previewOperacaoText.innerText
+        let atual = +this.atualOperacaoText.innerText
+
+        switch (operacao) {
+            case "+":
+                valorOperacao = preview + atual
+                this.updateScreen(valorOperacao, operacao, atual, preview)
+            break
+
+            case "-":
+                valorOperacao = preview - atual
+                this.updateScreen(valorOperacao, operacao, atual, preview)
+            break
+
+            case "*":
+                valorOperacao = preview * atual
+                this.updateScreen(valorOperacao, operacao, atual, preview)
+            break
+
+            case "/":
+                valorOperacao = preview / atual
+                this.updateScreen((valorOperacao, operacao, atual, preview))
+            break
+
+            case "C":
+                this.cleanScreen()
+            break
+
+            default:
+            return
+        }
+    }
+
+    updateScreen(   //inicia função de atualização de tela, quando atualizar o número será mostrado na tela
+        valorOperacao = null,
+        operacao = null,
+        atual = null,
+        preview = null
+    ){ 
+        if (valorOperacao === null)
+        this.atualOperacaoText.innerText += this.atualOperacao  // ao atualizar, ele faz com que o valor "atualOperacaoText" se concatene ao próximo valor enviado ao "atualOperacao"
+    else{
+            if (preview === 0){
+                valorOperacao = atual
+            }
+            this.previewOperacaoText.innerText = `${valorOperacao} ${operacao}`
+            this.atualOperacaoText.innerText = ''
+        } 
+    }   
 }
 
 let calculo =  new Calculator(previewOperacaoText, atualOperacaoText)
     
 buttons.forEach((btn) => {  // forEach é uma função que percorre cada elemento da variavel. Nesse caso a função percorrerá cada botão dentro de "buttons"
-                            // o forEach é basicamente "para cada" que é anunciado antes, no caso "buttons" e o btn é o elemento que será usado pra retornar o resultado
+                            // o forEach é basicamente "para cada" que é anunciado antes, no caso "buttons", e o "btn" é o elemento que será usado para capturar o valor do botão
 
     btn.addEventListener("click", (e) => { // aqui adicionamos uma função para o "btn", o primeiro parametro é o evento desejado, nomeamos como "click"
                                            // apesar de ser uma string, o parametro deve ser digitado corretamente para apontar o evento que desejamos capturar, como por exemplo:
@@ -63,9 +130,10 @@ buttons.forEach((btn) => {  // forEach é uma função que percorre cada element
                                        // no caso, o botão que foi clicado dentro desse evento,e o innerText apenas para orientar que o dado solicitado é o texto
 
         if (+value >= 0 || value === "."){ // +value faz a interpretação do texto como número, e se esse número for maior ou igual 0 ou igual a "." faça:
-            calculo.addDigit(value) // mostre o resultado da variavel valor
-        } else {    // se não
-            console.log("Op: " + value) //mostre texto + value (que só poderá ser um dos sinais + - / *)
+            calculo.addDigit(value)        // mostre o resultado da variavel valor
+        } else {                           // se não
+            console.log("Op: " + value)   // mostre texto + value (que só poderá ser um dos sinais + - / *)
+            calculo.identificaOperacao(value)
         }
     })
 })
