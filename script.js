@@ -20,10 +20,12 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
                                                           class Carro{
 
                                                           constructor (marca, modelo){
+
                                                           this.marca = marca
                                                           this.modelo = modelo
-                                                             this.ano = 2015
-                                                             }
+                                                          this.ano = 2015
+
+                                                           }
 
                                                           mostrarAtributos(){
                                                           return `Marca: ${this.marca}, Modelo: ${this.modelo}, Ano: ${this.ano}`
@@ -54,10 +56,26 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
         this.updateScreen()          // feito isso, chama-se a função de updateScreen
     }
 
-    cleanScreen(){
+    cleanAll(){                      // criando método para limpar tanto a div atual e a div do preview
         this.previewOperacaoText.innerText = ""
         this.atualOperacaoText.innerText = ""
     }
+
+    cleanAtual(){                    // criando método para limpar a div atual
+        this.atualOperacaoText.innerText = ""
+    }
+
+    removeDigit() {                  // método para remover o ultimo digito
+        this.atualOperacaoText.innerText = this.atualOperacaoText.innerText.slice(0, -1) // o campo atual recebe o campo atual menos o ultimo campo toda vez que o método é ativado
+    }                                                                                    // slice é um método que pode ser aplicado a strings e arrays. Ele permite extrair uma
+                                                                                         // parte específica de uma string ou array, criando uma nova string ou array com os elementos selecionados.
+                                                                                         /*
+                                                                                         let texto = "Exemplo de texto";
+                                                                                         let parteExtraida = texto.slice(8, 11)
+                                                                                         console.log(parteExtraida) = "Exemplo de " 
+                                                                                         as posições indicadas no slice foram extraidos e não foram para a nova variavel
+                                                                                         */
+
 
     identificaOperacao(operacao){
 
@@ -87,8 +105,17 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
             break
 
             case "C":
-                this.cleanScreen()
+                this.cleanAll()
             break
+
+            case "CE":
+                this.cleanAtual()
+            break
+
+            case "DEL":
+                this.removeDigit()
+            break
+            
 
             default:
             return
