@@ -41,7 +41,7 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
                                                  
         this.previewOperacaoText = previewOperacaoText // armezanando valor da variavel, em uma outra variavel que armazena o texto
         this.atualOperacaoText = atualOperacaoText     // armezanando valor da variavel, em uma outra variavel que armazena o texto
-        this.atualOperacao = ""                        // faz a operação atual sempre começar como uma string vazia
+        this.atualOperacao = ""                       // faz a operação atual sempre começar como uma string vazia
     }
 
     addDigit(digit){                 // o método add Digit é acionado quando um número é passado para ele, no caso ele está usando o valor do "atualOperacao"
@@ -76,6 +76,47 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
                                                                                          as posições indicadas no slice foram extraidos e não foram para a nova variavel
                                                                                          */
 
+    processEqual(){
+
+        if (atualOperacaoText.innerText == '') {
+            atualOperacaoText.innerText = '0';
+        }
+        
+        let preview = this.previewOperacaoText.innerText
+        let atual = this.atualOperacaoText.innerText
+        let valorAtual = parseFloat(atual)
+        let valorPreview = parseFloat(preview)
+
+        switch (true) {
+
+              case previewOperacaoText.innerText.includes("+"):
+              this.atualOperacaoText.innerText = valorAtual + valorPreview;
+              break
+
+              case previewOperacaoText.innerText.includes("-"):
+              this.atualOperacaoText.innerText = valorAtual - valorPreview;
+              break
+
+              case previewOperacaoText.innerText.includes("*"):
+              this.atualOperacaoText.innerText = valorAtual * valorPreview;
+              break
+
+              case previewOperacaoText.innerText.includes("/"):
+              if (valorPreview !== 0) {
+                this.atualOperacaoText.innerText = valorAtual / valorPreview;
+              } else {
+                this.atualOperacaoText.innerText = "Erro (divisão por zero)";
+              }
+              break
+
+              default:
+              this.atualOperacaoText.innerText = "Erro (operação desconhecida)";
+              break
+          }
+        
+          previewOperacaoText.innerText = '';
+          
+        }
 
     identificaOperacao(operacao){
 
@@ -83,10 +124,12 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
         let preview = +this.previewOperacaoText.innerText
         let atual = +this.atualOperacaoText.innerText
 
-        switch (operacao) {
-            case "+":
-                valorOperacao = preview + atual
-                this.updateScreen(valorOperacao, operacao, atual, preview)
+        switch (operacao) { // switch case é muito apropriado para nossa situação onde cada botão, dependendo de seu valor deverá executar uma ação diferente
+                            // para cada botão vamos retornar um método da classe. Dependendo do método retornaremos ou não parametros para ele
+
+            case "+":       // nesse caso por exemplo, caso o operador seja um "+" faça:
+                valorOperacao = preview + atual                                 // a variavel valorOperacao recebe o valor da variavel preview + atual
+                this.updateScreen(valorOperacao, operacao, atual, preview)      // depois de atribuir valores as variaveis chamamos o updateScreen e passamos os parametros do método
             break
 
             case "-":
@@ -116,6 +159,9 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
                 this.removeDigit()
             break
             
+            case "=":
+                this.processEqual()
+            break
 
             default:
             return
@@ -158,6 +204,7 @@ buttons.forEach((btn) => {  // forEach é uma função que percorre cada element
 
         if (+value >= 0 || value === "."){ // +value faz a interpretação do texto como número, e se esse número for maior ou igual 0 ou igual a "." faça:
             calculo.addDigit(value)        // mostre o resultado da variavel valor
+            console.log(value)
         } else {                           // se não
             console.log("Op: " + value)   // mostre texto + value (que só poderá ser um dos sinais + - / *)
             calculo.identificaOperacao(value)
