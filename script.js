@@ -75,17 +75,26 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
                                                                                          console.log(parteExtraida) = "Exemplo de " 
                                                                                          as posições indicadas no slice foram extraidos e não foram para a nova variavel
                                                                                          */
-
+                                                                                        
     processEqual(){
 
-        if (atualOperacaoText.innerText == '') {
-            atualOperacaoText.innerText = '0';
+        if (previewOperacaoText.innerText == '' && atualOperacaoText.innerText == ''){
+            return
+            }
+
+            if (atualOperacaoText.innerText == '') {
+                atualOperacaoText.innerText == '0'
+            }
+
+        if (previewOperacaoText.innerText == '' && atualOperacaoText.innerText !== ''){
+            this.atualOperacaoText.innerText = atualOperacaoText.innerText
         }
-        
+
         let preview = this.previewOperacaoText.innerText
         let atual = this.atualOperacaoText.innerText
         let valorAtual = parseFloat(atual)
         let valorPreview = parseFloat(preview)
+
 
         switch (true) {
 
@@ -94,7 +103,7 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
               break
 
               case previewOperacaoText.innerText.includes("-"):
-              this.atualOperacaoText.innerText = valorAtual - valorPreview;
+              this.atualOperacaoText.innerText = valorPreview - valorAtual;
               break
 
               case previewOperacaoText.innerText.includes("*"):
@@ -102,15 +111,15 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
               break
 
               case previewOperacaoText.innerText.includes("/"):
-              if (valorPreview !== 0) {
-                this.atualOperacaoText.innerText = valorAtual / valorPreview;
+              if (valorAtual !== 0) {
+                this.atualOperacaoText.innerText = valorPreview / valorAtual;
               } else {
-                this.atualOperacaoText.innerText = "Erro (divisão por zero)";
+                this.atualOperacaoText.innerText = '0';
               }
               break
 
               default:
-              this.atualOperacaoText.innerText = "Erro (operação desconhecida)";
+                console.log("ERRO")
               break
           }
         
@@ -120,31 +129,27 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
 
     identificaOperacao(operacao){
 
-        let valorOperacao
-        let preview = +this.previewOperacaoText.innerText
-        let atual = +this.atualOperacaoText.innerText
 
-        switch (operacao) { // switch case é muito apropriado para nossa situação onde cada botão, dependendo de seu valor deverá executar uma ação diferente
-                            // para cada botão vamos retornar um método da classe. Dependendo do método retornaremos ou não parametros para ele
+    // Preciso que: 
+    // Quando um operador for acionado, já havendo um operador no preview, primeiro seja feito o calculo entre o número que está no preview e o número que está na atual, e o resultado desse calculo vá para o preview junto com o novo operador teclado
+    // Quando houver um número e um operador no preview como "1+" e o campo atual estjea vazio, caso o usuário aperte em outro operador como "-" o operador do preview seja substituido, mas preservando o número que já estava no preview
+    // Em caso do usuário digitar por exemplo "0+ =" seja acionado corretamente a função de calculo processEqual() pois mesmo sendo uma conta ilógica, ela adicionará valor para o campo vazio (no caso 0)
 
-            case "+":       // nesse caso por exemplo, caso o operador seja um "+" faça:
-                valorOperacao = preview + atual                                 // a variavel valorOperacao recebe o valor da variavel preview + atual
-                this.updateScreen(valorOperacao, operacao, atual, preview)      // depois de atribuir valores as variaveis chamamos o updateScreen e passamos os parametros do método
-            break
-
+        switch (operacao) {
+            case "+":
             case "-":
-                valorOperacao = preview - atual
-                this.updateScreen(valorOperacao, operacao, atual, preview)
-            break
-
             case "*":
-                valorOperacao = preview * atual
-                this.updateScreen(valorOperacao, operacao, atual, preview)
-            break
-
             case "/":
-                valorOperacao = preview / atual
-                this.updateScreen((valorOperacao, operacao, atual, preview))
+                
+                if  (atualOperacaoText.innerText == ''){
+                    previewOperacaoText.innerText = '0'
+                }
+
+                    this.previewOperacaoText.innerText += this.atualOperacaoText.innerText + operacao;
+                    this.atualOperacaoText.innerText = ""; // Limpa o valor atual
+                    this.atualOperacao = ""; // Limpa a variável que armazena o valor atual
+                    this.updateScreen(); // Atualiza a tela
+
             break
 
             case "C":
@@ -168,21 +173,9 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
         }
     }
 
-    updateScreen(   //inicia função de atualização de tela, quando atualizar o número será mostrado na tela
-        valorOperacao = null,
-        operacao = null,
-        atual = null,
-        preview = null
-    ){ 
-        if (valorOperacao === null)
-        this.atualOperacaoText.innerText += this.atualOperacao  // ao atualizar, ele faz com que o valor "atualOperacaoText" se concatene ao próximo valor enviado ao "atualOperacao"
-    else{
-            if (preview === 0){
-                valorOperacao = atual
-            }
-            this.previewOperacaoText.innerText = `${valorOperacao} ${operacao}`
-            this.atualOperacaoText.innerText = ''
-        } 
+
+    updateScreen(){
+        this.atualOperacaoText.innerText += this.atualOperacao;
     }   
 }
 
@@ -204,7 +197,6 @@ buttons.forEach((btn) => {  // forEach é uma função que percorre cada element
 
         if (+value >= 0 || value === "."){ // +value faz a interpretação do texto como número, e se esse número for maior ou igual 0 ou igual a "." faça:
             calculo.addDigit(value)        // mostre o resultado da variavel valor
-            console.log(value)
         } else {                           // se não
             console.log("Op: " + value)   // mostre texto + value (que só poderá ser um dos sinais + - / *)
             calculo.identificaOperacao(value)
