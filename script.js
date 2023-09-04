@@ -76,108 +76,119 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
                                                                                          as posições indicadas no slice foram extraidos e não foram para a nova variavel
                                                                                          */
                                                                                         
-    processEqual(){
+    processEqual(){ // Método dentro da classe usada para fazer o calculo
 
-        if (previewOperacaoText.innerText == '' && atualOperacaoText.innerText == ''){
+        let preview = this.previewOperacaoText.innerText // criando uma variavel para armazenar o valor atual que estiver no preview
+        let atual = this.atualOperacaoText.innerText     // criando uma variavel para armazenar valor atual que estiver no campo atual
+        let valorAtual = parseFloat(atual)               // criando uma variavel para armazenar valor como número, agora essa variavel não armazena uma string e sim um number do valor do campo atual
+        let valorPreview = parseFloat(preview)           // criando uma variavel para armazenar valor como número, agora essa variavel não armazena uma string e sim um number do valor do preview
+
+        
+        if (previewOperacaoText.innerText == '' && atualOperacaoText.innerText == ''){  // tratando possiveis exceções para evitar bugs
             return
             }
 
-            if (atualOperacaoText.innerText == '') {
-                atualOperacaoText.innerText == '0'
-            }
-
-        if (previewOperacaoText.innerText == '' && atualOperacaoText.innerText !== ''){
+        if (previewOperacaoText.innerText == '' && atualOperacaoText.innerText !== ''){ // tratando possiveis exceções para evitar bugs
             this.atualOperacaoText.innerText = atualOperacaoText.innerText
         }
 
-        let preview = this.previewOperacaoText.innerText
-        let atual = this.atualOperacaoText.innerText
-        let valorAtual = parseFloat(atual)
-        let valorPreview = parseFloat(preview)
+        if (atualOperacaoText.innerText == '') {                                        // tratando possiveis exceções para evitar bugs
+            valorAtual = 0 
+        }
 
 
-        switch (true) {
+        switch (true) {     // usando switch para testar condições positivas para cada botão
 
-              case previewOperacaoText.innerText.includes("+"):
+              case previewOperacaoText.innerText.includes("+"):     // caso o preview incluir "+" nas strings faça:
+                                                                    // lembrando que a função .includes só funcionará como desejado caso a variavel anunciada armazene especificamente uma string ou number
               this.atualOperacaoText.innerText = valorAtual + valorPreview;
               break
 
-              case previewOperacaoText.innerText.includes("-"):
+              case previewOperacaoText.innerText.includes("-"):     // caso o preview incluir "-" nas strings faça:
               this.atualOperacaoText.innerText = valorPreview - valorAtual;
               break
 
-              case previewOperacaoText.innerText.includes("*"):
+              case previewOperacaoText.innerText.includes("*"):     // caso o preview incluir "/" nas strings faça:
               this.atualOperacaoText.innerText = valorAtual * valorPreview;
               break
 
-              case previewOperacaoText.innerText.includes("/"):
-              if (valorAtual !== 0) {
+              case previewOperacaoText.innerText.includes("/"):     // caso o preview incluir "*" nas strings faça:
+              if (valorAtual !== 0) { // se torne o valorAtual for zero faça:
                 this.atualOperacaoText.innerText = valorPreview / valorAtual;
-              } else {
+              } else { //se não, faça:
                 this.atualOperacaoText.innerText = '0';
               }
               break
 
               default:
-                console.log("ERRO")
+                console.log("ERRO") // caso nenhuma das condições sejam atendidas mostre erro no log
               break
           }
         
-          previewOperacaoText.innerText = '';
+          previewOperacaoText.innerText = ''; // ao fim, o valor atual é limpo
           
         }
 
-    identificaOperacao(operacao){
+    identificaOperacao(operacao){ // método para os operadores, será aplicado quando um operador for acionado
         
-        let operadores = ["+", "-", "*", "/"]
-        let verificar = this.previewOperacaoText.innerText
-        let verificarAtual = this.atualOperacaoText.innerText
-        let numeros = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        let operadores = ["+", "-", "*", "/"] // operadores armazenando strings que representam os operadores
+        let verificar = this.previewOperacaoText.innerText // verificar armazena o valor atual do preview quando o método for ativado
+        let verificarAtual = this.atualOperacaoText.innerText // armazena o valor atual do campo atual quando o método for ativado
+        let numeros = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"] // variavel para armazenar os números
 
-        if (operadores.some(operador => verificar.includes(operador)) && numeros.some(numero => verificarAtual.includes(numero))) {
-            console.log("já há um operador no preview, faça o calculo e concatene o resultado ao novo operador no preview")
-            this.processEqual()
-          }
-
-        switch (operacao) {
-            case "+":
+        switch (operacao) { //switch testa diversas possibilidades
+            case "+": // caso o parametro do identificaOperacao for + - * ou / faça:
             case "-":
             case "*":
-            case "/":
+            case "/": // sendo o parametro um dos caracteres acima, verifique SE:
                 
+            if  (operadores.some(operador => verificar.includes(operador)) && atualOperacaoText.innerText === ''){ // se algum elemento do array "operadores" está incluso na string verificar e o campo atual estiver vazio faça:
+                // some é uma função de array, ela verifica se algum elemento do array atende a uma condição, ela retorna true se pelo menos um elemento satisfazer a condição, caso contrario retorna false
+                // no caso, ele está anunciando, verifique se é verdadeiro o que está entre os parenteses para o array "operadores". Dentro do parenteses testamos se para cada elemento operador no array operadores,
+                // a função verifica se a string verificar contém esse operador usando o método .includes(). Se pelo menos um desses elementos em operadores estiver presente na string verificar, a função .some() retornará true.
+                // no caso, a palavra "operador" é o parametro da função, e nesse caso poderia ter qualquer nome, ela representa cada elemento do array que será testado, e retornará o positivo ou não.
+                // em suma estamos testando se o conteudo da variavel verificar, no caso uma string, se encontra dentro de algum dos elementos do array "operadores", no caso, se no preview tem algum dos caracteres "+ - / *"
 
-          if  (operadores.some(operador => verificar.includes(operador)) && atualOperacaoText.innerText === ''){
                 console.log("altere o operador")
-                let alteraOperador = previewOperacaoText.innerText.slice(0,-1)
-                this.previewOperacaoText.innerText = alteraOperador
+                let alteraOperador = previewOperacaoText.innerText.slice(0,-1) // criando uma variavel que armazena o conteudo em texto do preview, com exeção do ultimo caracter
+                this.previewOperacaoText.innerText = alteraOperador // o preview recebe o valor da variavel alteraOperador, no caso ela mesma, menos o ultimo caracter, fazemos isso para poder dar a possibilidade de alterar o operador quando necessário
+              }
+
+            if (operadores.some(operador => verificar.includes(operador)) && numeros.some(numero => verificarAtual.includes(numero))) { // se tiver um operador no preview e tiver um numero no no atual, faça:
+                console.log("já há um operador no preview, faça o calculo e concatene o resultado ao novo operador no preview")
+                this.processEqual() // caso tenha um operador e um número no atual, ative a função processEqual, mas não entendi como o resultado vai para o preview junto ao novo operador
               }
                 
-                if  (atualOperacaoText.innerText == '' && previewOperacaoText.innerText == ''){
-                    previewOperacaoText.innerText = '0' + operacao
+            if  (atualOperacaoText.innerText == '' && previewOperacaoText.innerText == '' && operacao !== "-"){ // se os requisitos forem cumpridos
+                    previewOperacaoText.innerText = '0' + operacao // mostre no preview 0 + operador
                 }
 
-                else {
+            if (atualOperacaoText.innerText == '' && previewOperacaoText.innerText == '' && operacao === "-"){ // se os requisitos forem cumrpidos
+                this.atualOperacaoText.innerText = operacao // o campo atual mostra o operador
+            }
 
-                    this.previewOperacaoText.innerText += this.atualOperacaoText.innerText + operacao;
-                    this.atualOperacaoText.innerText = ""; // Limpa o valor atual
-                    this.atualOperacao = ""; // Limpa a variável que armazena o valor atual
-                    this.updateScreen(); // Atualiza a tela
+            else { // se nenhum If for verdadeiro siga o que está abaixo quando um operador for digitado
+
+                    this.previewOperacaoText.innerText += this.atualOperacaoText.innerText + operacao // preview recebe o número que estiver no campo atual junto ao operador teclado
+                    this.atualOperacaoText.innerText = "" // Limpa o valor atual
+                    this.atualOperacao = "" // Limpa a variável que armazena o valor atual
+                    this.updateScreen() // Atualiza a tela
                 }
 
-            break
-            default:
-            return
+            break // se o case for verdadeiro, faça o conteudo e pare, siga para o proximo case caso haja
+            default: // se nenhum case for satisfeito faça:
+            return // return vazio, não faça nada
         }
     }
 
-        acoesCalculadora(acoes){
-        switch (acoes){
+        acoesCalculadora(acoes){ // método para algumas teclas que não são números nem operadores
+        switch (acoes){ // switch para testar as afirmações
             
-            case "C":
-                this.cleanAll()
-            break
+            case "C": // caso o parametro da função seja equivalente a string C faça:
+                this.cleanAll() // limpe tudo, função previamente criada dentro da classe
+            break // feito isso, pare e passe para o próximo case
 
-            case "CE":
+            case "CE": // a lógica permanesse a mesma para o resto dos casos
                 this.cleanAtual()
             break
 
@@ -195,8 +206,9 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
             }
 
 
-    updateScreen(){
-        this.atualOperacaoText.innerText += this.atualOperacao;
+    updateScreen(){ // método para atualizar tela, quando ela for chamada, faça:
+        this.atualOperacaoText.innerText += this.atualOperacao; // a tela atual recebe concatenado o valor da atual operação, ou seja, o campo valor atual sempre vai receber e concatenar o próximo valor, isso vai ser usado quando 
+                                                                // um número for digitado para aparecer na tela atual
     }   
 }
 
@@ -217,14 +229,14 @@ buttons.forEach((btn) => {  // forEach é uma função que percorre cada element
                                        // no caso, o botão que foi clicado dentro desse evento,e o innerText apenas para orientar que o dado solicitado é o texto
 
         if (+value >= 0 || value === "."){ // +value faz a interpretação do texto como número, e se esse número for maior ou igual 0 ou igual a "." faça:
-            calculo.addDigit(value)        // mostre o resultado da variavel valor
-        } else if (value === "+" || value === "-" || value === "*" || value === "/") {                           // se não
-            console.log("Op: " + value)   // mostre texto + value (que só poderá ser um dos sinais + - / *)
-            calculo.identificaOperacao(value)
+            calculo.addDigit(value)        // mande o valor como parametro para a função addDigit
+        } else if (value === "+" || value === "-" || value === "*" || value === "/") {     // se não, mas (condição) for verdadeiro, faça:
+            console.log("Op: " + value)   // mostre o valor no console log
+            calculo.identificaOperacao(value) // mande o valor como parametro para a função identificaOperacao
         }
         else{
             console.log("Ação:" + value)
-            calculo.acoesCalculadora(value)
+            calculo.acoesCalculadora(value) // mande o valor como parametro para a função acoesCalculadora
         }
     })
 })
