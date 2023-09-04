@@ -128,12 +128,16 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
         }
 
     identificaOperacao(operacao){
+        
+        let operadores = ["+", "-", "*", "/"]
+        let verificar = this.previewOperacaoText.innerText
+        let verificarAtual = this.atualOperacaoText.innerText
+        let numeros = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
-
-    // Preciso que: 
-    // Quando um operador for acionado, já havendo um operador no preview, primeiro seja feito o calculo entre o número que está no preview e o número que está na atual, e o resultado desse calculo vá para o preview junto com o novo operador teclado
-    // Quando houver um número e um operador no preview como "1+" e o campo atual estjea vazio, caso o usuário aperte em outro operador como "-" o operador do preview seja substituido, mas preservando o número que já estava no preview
-    // Em caso do usuário digitar por exemplo "0+ =" seja acionado corretamente a função de calculo processEqual() pois mesmo sendo uma conta ilógica, ela adicionará valor para o campo vazio (no caso 0)
+        if (operadores.some(operador => verificar.includes(operador)) && numeros.some(numero => verificarAtual.includes(numero))) {
+            console.log("já há um operador no preview, faça o calculo e concatene o resultado ao novo operador no preview")
+            this.processEqual()
+          }
 
         switch (operacao) {
             case "+":
@@ -141,17 +145,34 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
             case "*":
             case "/":
                 
-                if  (atualOperacaoText.innerText == ''){
-                    previewOperacaoText.innerText = '0'
+
+          if  (operadores.some(operador => verificar.includes(operador)) && atualOperacaoText.innerText === ''){
+                console.log("altere o operador")
+                let alteraOperador = previewOperacaoText.innerText.slice(0,-1)
+                this.previewOperacaoText.innerText = alteraOperador
+              }
+                
+                if  (atualOperacaoText.innerText == '' && previewOperacaoText.innerText == ''){
+                    previewOperacaoText.innerText = '0' + operacao
                 }
+
+                else {
 
                     this.previewOperacaoText.innerText += this.atualOperacaoText.innerText + operacao;
                     this.atualOperacaoText.innerText = ""; // Limpa o valor atual
                     this.atualOperacao = ""; // Limpa a variável que armazena o valor atual
                     this.updateScreen(); // Atualiza a tela
+                }
 
             break
+            default:
+            return
+        }
+    }
 
+        acoesCalculadora(acoes){
+        switch (acoes){
+            
             case "C":
                 this.cleanAll()
             break
@@ -167,11 +188,11 @@ class Calculator { // criando uma classe. Classe é um modelo para objetos, obje
             case "=":
                 this.processEqual()
             break
-
             default:
             return
-        }
-    }
+
+                }
+            }
 
 
     updateScreen(){
@@ -197,9 +218,13 @@ buttons.forEach((btn) => {  // forEach é uma função que percorre cada element
 
         if (+value >= 0 || value === "."){ // +value faz a interpretação do texto como número, e se esse número for maior ou igual 0 ou igual a "." faça:
             calculo.addDigit(value)        // mostre o resultado da variavel valor
-        } else {                           // se não
+        } else if (value === "+" || value === "-" || value === "*" || value === "/") {                           // se não
             console.log("Op: " + value)   // mostre texto + value (que só poderá ser um dos sinais + - / *)
             calculo.identificaOperacao(value)
+        }
+        else{
+            console.log("Ação:" + value)
+            calculo.acoesCalculadora(value)
         }
     })
 })
